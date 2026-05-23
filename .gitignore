@@ -1,3 +1,4 @@
 .cache/
+*.dSYM/
 /test_arena
 compile_commands.json

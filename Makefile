@@ -1,6 +1,6 @@
 CC      = gcc
-CFLAGS  = -std=c99 -Wall $(shell pkg-config --cflags criterion 2>/dev/null)
-LDLIBS  = $(shell pkg-config --libs criterion 2>/dev/null)
+CFLAGS  = -std=c99 -Wall -fsanitize=address -g $(shell pkg-config --cflags criterion 2>/dev/null)
+LDLIBS  = -fsanitize=address $(shell pkg-config --libs criterion 2>/dev/null)
 
 SRC      = src/arena.c
 TEST_SRC = test/test_arena.c
@@ -14,6 +14,7 @@ test: test_arena
 
 clean:
 	rm -f test_arena
+	rm -r *.dSYM
 
 # -------------------------------------------------------------------
 # Editor support: generate compile_commands.json for clangd
