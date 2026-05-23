@@ -8,11 +8,6 @@ This project implements a linked-list arena from which memory chunks are
 dispensed on demand. When a block is fully allocated, a new block is created and
 linked. The eventual `arena_free` call will release all resources in one go.
 
-To minimize internal fragmentation, **8‑byte alignment is applied only when the
-padding waste is strictly less than the requested allocation size**.  
-Small objects (1–7 bytes) are packed tightly; larger objects are always 8‑byte
-aligned.
-
 ## Overall Design
 
 - **Linked-list arena** – maintains a linked-list of arenas.
