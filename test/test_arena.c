@@ -11,8 +11,8 @@ Test(arena, alloc_returns_non_null) {
 }
 
 /*
- * Since a fresh arena instance is created at the start of this test, it's
- * assumed that it has enough free space to allocate all 10 bytes consecutively.
+ * Since a fresh arena instance is created at the start of this test, it is
+ * assumed to have enough free space to allocate consecutively.
  */
 Test(arena, small_allocs_pack_tightly) {
     arena *a = init_arena();
@@ -21,8 +21,8 @@ Test(arena, small_allocs_pack_tightly) {
         void *p = arena_alloc(a, 1);
         cr_assert_not_null(p);
         if (prev != NULL) {
-            cr_assert_eq((char*)p, (char*)prev + 1,
-            "Consecutive addresses should be exactly 1 byte apart");
+            cr_assert_eq((char*)p, (char*)prev + ARENA_ALIGN,
+            "Consecutive addresses should be exactly ARENA_ALIGN bytes apart");
         }
         prev = p;
     }
@@ -33,8 +33,7 @@ Test(arena, large_alloc_is_8byte_aligned) {
     // Create a known misaligned state
     arena_alloc(a, 1);
     void *p = arena_alloc(a, 16);
-    cr_assert(
-        (uintptr_t)p % 8 == 0,
+    cr_assert( (uintptr_t)p % 8 == 0,
         "16‑byte allocation must be 8‑byte aligned");
 }
 

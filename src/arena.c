@@ -8,37 +8,28 @@
  * least the requested size allocated. If the requested size is bigger than a
  * single block (ARENA_SIZE), it returns NULL. It will allocate new blocks if
  * needed.
- *
- * Alignment rule:
- *   We align to an 8‑byte boundary only when doing so wastes fewer
- *   bytes than the allocation itself. If padding >= size, the block
- *   is packed at the current cursor with no alignment guarantee.
- *
- * This keeps tiny allocations dense (e.g. 1‑byte requests use exactly
- * 1 byte) while still providing natural alignment for larger objects.
- * Callers must respect the actual alignment of the returned pointer;
- * no `max_align_t` guarantee is made.
  */
 void *arena_alloc(arena *a, size_t size) {
-    if (a == NULL) return NULL;
-    if (size > ARENA_SIZE) return NULL;   // too large for any single arena
+    if (a == NULL || size == 0 || size > ARENA_SIZE)
+        return NULL;
 
-    size_t current = a->cursor;
-    size_t aligned = (current + 7) & ~7;
-    size_t padding = aligned - current;
+    while (1) {
+        size_t current = a->cursor;
+        // align to ARENA_ALIGN bytes
+        size_t aligned = (current + ARENA_ALIGN - 1) & ~(ARENA_ALIGN - 1);
 
-    // Skip alignment if padding is greater than or equal to the requested size.
-    if (padding >= size) {
-        aligned = current;
+        if (aligned + size <= ARENA_SIZE) {
+            a->cursor = aligned + size;
+            return (char *)a->start + aligned;
+        }
+
+        // Not enough room, try next arena
+        if (!a->next) {
+            a->next = init_arena();
+            if (!a->next) return NULL;    // out of memory
+        }
+        a = a->next;
     }
-
-    if (aligned + size > ARENA_SIZE) {
-        if (!a->next) a->next = init_arena();
-        return arena_alloc(a->next, size);
-    }
-
-    a->cursor = aligned + size;
-    return (char *)a->start + aligned;
 }
 
 void arena_free(arena *a) {

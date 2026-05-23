@@ -17,11 +17,7 @@ aligned.
 
 - **Linked-list arena** – maintains a linked-list of arenas.
 - **Bump allocation** – a single `cursor` advances after each request.
-- **Conditional alignment**:
-  - Compute the next 8‑byte boundary: `aligned = (cursor + 7) & ~7`.
-  - If `aligned - cursor >= size`, skip alignment and place the block at
-    `cursor` (tight packing).
-  - Otherwise, use the aligned offset.
+- **Memory alignment** - aligning memory based on `max_align_t`.
 - **No free list** – allocations are permanent until the arena is destroyed.
 - **Returns `NULL`** when the requested size is larger than a single arena block.
 

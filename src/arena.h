@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define ARENA_SIZE (2 << 11)
+#define ARENA_ALIGN _Alignof(max_align_t)
 
 typedef struct arena arena;
 struct arena {

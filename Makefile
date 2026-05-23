@@ -14,7 +14,7 @@ test: test_arena
 
 clean:
 	rm -f test_arena
-	rm -r *.dSYM
+	rm -rf *.dSYM
 
 # -------------------------------------------------------------------
 # Editor support: generate compile_commands.json for clangd
