@@ -14,3 +14,16 @@ test: test_arena
 
 clean:
 	rm -f test_arena
+
+# -------------------------------------------------------------------
+# Editor support: generate compile_commands.json for clangd
+# -------------------------------------------------------------------
+
+BEAR := $(shell command -v bear 2>/dev/null)
+
+.PHONY: compile_commands.json
+compile_commands.json: clean
+ifndef BEAR
+	$(error "bear is not installed. Install it with: brew install bear")
+endif
+	$(BEAR) -- make test_arena
