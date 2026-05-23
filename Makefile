@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -std=c99 -Wall -fsanitize=address -g $(shell pkg-config --cflags criterion 2>/dev/null)
+CFLAGS  = -std=c11 -Wall -fsanitize=address -g $(shell pkg-config --cflags criterion 2>/dev/null)
 LDLIBS  = -fsanitize=address $(shell pkg-config --libs criterion 2>/dev/null)
 
 SRC      = src/arena.c

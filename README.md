@@ -27,7 +27,7 @@ aligned.
 
 ## Dependencies
 
-- **C compiler** (C99 or later)
+- **C compiler** (C11 or later)
 - **[Criterion](https://github.com/Snaipe/Criterion)** – unit testing framework.
 - **[pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)** – used
   to locate Criterion’s compile and link flags.
