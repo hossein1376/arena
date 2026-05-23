@@ -3,11 +3,13 @@
 
 #define ARENA_SIZE (2 << 11)
 
-void *arena_alloc(unsigned long size);
-void arena_free();
-static void init_arena();
-
-typedef struct {
+typedef struct arena arena;
+struct arena {
     void   *start;
-    size_t cursor;
-} arena;
+    size_t  cursor;
+    arena  *next;
+};
+
+arena *init_arena();
+void *arena_alloc(arena *a, unsigned long size);
+void arena_free(arena *a);
